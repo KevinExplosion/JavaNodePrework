@@ -12,6 +12,7 @@
     "prompt": "^1.0.0"
   },
   "devDependencies": {
+    "bower-files": "^3.11.3",
     "browserify": "^13.0.0",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",

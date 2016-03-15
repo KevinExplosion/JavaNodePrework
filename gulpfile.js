@@ -2,6 +2,17 @@ var gulp = require('gulp');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var concat = require('gulp-concat');
+var lib = require('bower-files')({
+  "overrides":{
+    "bootstrap" : {
+      "main": [
+        "less/bootstrap.less",
+        "dist/css/bootstrap.css",
+        "dist/js/bootstrap.js"
+      ]
+    }
+  }
+});
 //throw your require variables up here!
 
 gulp.task('concatInterface', function() {
@@ -19,4 +30,28 @@ gulp.task('jsBrowserify', ['concatInterface'], function(){
     .pipe(source('app.js')) //create app.js
     .pipe(gulp.dest('./build/js')); //put it inside of this file path
     //"chain of function calls," one long line of tasks"
+});
+
+gulp.task('bowerJS', function() {
+  return gulp.src(lib.ext('js').files)
+    .pipe(concat('vendor.min.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest('./build/js'));
+});
+
+gulp.task('bowerCSS', function() {
+  return gulp.src(lib.ext('css').files)
+    .pipe(concat('vendor.css'))
+    .pipe(gulp.dest('./build/css'));
+});
+
+gulp.task('bower', ['bowerJS', 'bowerCSS']);
+
+gulp.task('build', ['clean'], function() {
+  if (buildProduction) {
+    gulp.start('minifyScripts');
+  } else {
+    gulp.start('jsBroswerify');
+  }
+  gulp.start('bower');
 });
